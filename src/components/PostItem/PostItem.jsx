@@ -1,13 +1,13 @@
 import React from 'react'
 import "./PostItem.css"
 
-const PostItem = () => {
+const PostItem = ({post}) => {
   return (
     <div className="post">
     <div className="post__content">
-      <strong>1. Javascript</strong>
+      <strong>{post.title}</strong>
       <div>
-         Javascript - programming language
+         {post.body}
       </div>
     </div>
     <div className="post__btns">
