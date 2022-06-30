@@ -18,7 +18,7 @@ const PostForm = ({create}) => {
 }
    
   return (
-    <form>
+    <form className={styles.postForm}>
         <MyInput
         value={post.title}
         onChange={(e) => setPost({...post, title: e.target.value})}
@@ -31,7 +31,9 @@ const PostForm = ({create}) => {
         type="text" 
         placeholder="Discription"
         />
-        <MyButton onClick={addNewPost}>Create post</MyButton>
+        <div className={styles.button}>
+           <MyButton onClick={addNewPost}>Create post</MyButton>
+        </div>
     </form>
   )
 }

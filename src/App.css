@@ -12,3 +12,9 @@
 .App {
     width: 800px;
 }
+
+.message {
+    text-align: center;
+    color: red;
+    margin-top: 50px;
+}

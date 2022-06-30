@@ -22,7 +22,10 @@ function App() {
   return (
     <div className="App">
       <PostForm create={cretaePost}/>
-      <PostList remove={removePost} posts={posts} title="Список Постов"/>
+      {posts.length !== 0 
+          ? <PostList remove={removePost} posts={posts} title="Список Постов"/>
+          : <div className="message"><h1>Posts not found!</h1></div>
+      }
     </div>
   );
 }
