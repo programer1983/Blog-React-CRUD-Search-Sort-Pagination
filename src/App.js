@@ -7,37 +7,30 @@ import MyInput from "./Ui/Input/MyInput";
 
 
 function App() {
-  const [title, setTitle] = React.useState("")
-  const [body, setBody] = React.useState("")
   const [posts, setPosts] = React.useState([
     {id: 1, title: 'Javascript', body: "Discription"},
     {id: 2, title: 'Javascript2', body: "Discription"},
     {id: 3, title: 'Javascript3', body: "Discription"},
   ])
+  const [post, setPost] = React.useState({title: "", body: ""})
 
   const addNewPost = (e) => {
     e.preventDefault()
-    const newPost = {
-      id: Date.now(),
-      title,
-      body,
-    }
-    setPosts([...posts, newPost])
-    setTitle("")
-    setBody("")
+    setPosts([...posts, {...post, id: Date.now()}])
+    setPost({title: "", body: ""})
   }
 
   return (
     <div className="App">
       <MyInput
-         value={title}
-         onChange={(e) => setTitle(e.target.value)}
+         value={post.title}
+         onChange={(e) => setPost({...post, title: e.target.value})}
          type="text" 
          placeholder="Post title"
       />
       <MyInput
-        value={body}
-        onChange={(e) => setBody(e.target.value)}
+        value={post.body}
+        onChange={(e) => setPost({...post, body: e.target.value})}
         type="text" 
         placeholder="Discription"
       />
