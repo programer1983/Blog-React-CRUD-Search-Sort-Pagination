@@ -1,13 +1,13 @@
 import React from 'react'
 import "./PostItem.css"
 
-const PostItem = ({post}) => {
+const PostItem = ({post, number}) => {
   return (
     <div className="post">
     <div className="post__content">
-      <strong>{post.title}</strong>
+      <strong>{number}. {post.title}</strong>
       <div>
-         {post.body}
+         {post.body} 
       </div>
     </div>
     <div className="post__btns">
