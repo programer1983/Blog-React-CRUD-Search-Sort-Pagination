@@ -1,7 +1,7 @@
 import React from 'react'
 import "./PostItem.css"
 
-const PostItem = ({post, number}) => {
+const PostItem = ({post, number, remove}) => {
   return (
     <div className="post">
     <div className="post__content">
@@ -11,7 +11,7 @@ const PostItem = ({post, number}) => {
       </div>
     </div>
     <div className="post__btns">
-      <button>Delete</button>
+      <button onClick={() => remove(post.id)}>Delete</button>
     </div>
   </div>
   )
