@@ -23,6 +23,11 @@ function App() {
     return posts
   }, [selectedSort, posts])
 
+  const sortedAndSearchedPosts = React.useMemo(() => {
+    return sortedPosts.filter(post => post.title.toLowerCase().includes(searchQuery.toLowerCase()))
+
+  }, [searchQuery, sortedPosts])
+
   const cretaePost = (newPost) => {
     setPosts([...posts, newPost])
   }
@@ -57,8 +62,8 @@ function App() {
             ]}
           />
         </div>
-      {posts.length !== 0 
-          ? <PostList remove={removePost} posts={sortedPosts} title="Список Постов"/>
+      {sortedAndSearchedPosts.length !== 0 
+          ? <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Список Постов"/>
           : <div className="message"><h1>Posts not found!</h1></div>
       }
     </div>
