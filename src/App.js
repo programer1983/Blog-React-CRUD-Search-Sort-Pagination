@@ -2,6 +2,7 @@ import React from "react";
 import "./App.css"
 import PostForm from "./components/PostForm/PostForm";
 import PostList from "./components/PostList/PostList"
+import MyInput from "./Ui/Input/MyInput";
 import Select from "./Ui/Select/Select";
 
 
@@ -12,7 +13,15 @@ function App() {
     {id: 3, title: 'бб', body: "бб"},
   ])
 
-  const [selectedPost, setSelectedPost] =  React.useState("")
+  const [selectedSort, setSelectedSort] =  React.useState("")
+  const [searchQuery, setSearchQuery] = React.useState("")
+
+  const sortedPosts = React.useMemo(() => {
+    if(selectedSort){
+      return [...posts.sort((a, b) => a[selectedSort].localeCompare(b[selectedSort]))]
+    }
+    return posts
+  }, [selectedSort, posts])
 
   const cretaePost = (newPost) => {
     setPosts([...posts, newPost])
@@ -23,8 +32,7 @@ function App() {
   }
 
   const sortPosts = (sort) => {
-    setSelectedPost(sort)
-    setPosts([...posts.sort((a, b) => a[sort].localeCompare(b[sort]))])
+    setSelectedSort(sort)
   }
 
   return (
@@ -32,8 +40,15 @@ function App() {
       <PostForm create={cretaePost}/>
         <hr style={{margin: '20px 0' }} />
         <div>
+          <MyInput
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            type="text"
+            placeholder="Search"
+             
+          />
           <Select
-            value={selectedPost}
+            value={selectedSort}
             sortPosts={sortPosts}
             defaultUalve="Sort"
             options={[
@@ -43,7 +58,7 @@ function App() {
           />
         </div>
       {posts.length !== 0 
-          ? <PostList remove={removePost} posts={posts} title="Список Постов"/>
+          ? <PostList remove={removePost} posts={sortedPosts} title="Список Постов"/>
           : <div className="message"><h1>Posts not found!</h1></div>
       }
     </div>
