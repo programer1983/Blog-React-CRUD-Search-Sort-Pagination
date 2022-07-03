@@ -1,4 +1,5 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect } from "react";
 import "./App.css"
 import MyModal from "./components/MyModal/MyModal";
 import PostFilter from "./components/PostFilter/PostFilter";
@@ -13,6 +14,15 @@ function App() {
   const [filter, setFilter] = React.useState({sort: "", query: ""})
   const [modal, setModal] = React.useState(false)
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
+
+  async function fetchPost(){
+    const response = await axios.get("https://jsonplaceholder.typicode.com/posts")
+    setPosts(response.data)
+  }
+
+  React.useEffect(() => {
+    fetchPost()
+  }, [])
 
   const cretaePost = (newPost) => {
     setPosts([...posts, newPost])
