@@ -4,28 +4,15 @@ import MyModal from "./components/MyModal/MyModal";
 import PostFilter from "./components/PostFilter/PostFilter";
 import PostForm from "./components/PostForm/PostForm";
 import PostList from "./components/PostList/PostList"
+import { usePosts } from "./Hooks/UsePost";
 import MyButton from "./Ui/Button/MyButton";
 
 function App() {
-  const [posts, setPosts] = React.useState([
-    {id: 1, title: 'аа', body: "аа"},
-    {id: 2, title: 'гг', body: "гг"},
-    {id: 3, title: 'бб', body: "бб"},
-  ])
+  const [posts, setPosts] = React.useState([])
 
   const [filter, setFilter] = React.useState({sort: "", query: ""})
   const [modal, setModal] = React.useState(false)
-  
-  const sortedPosts = React.useMemo(() => {
-    if(filter.sort){
-      return [...posts.sort((a, b) => a[filter.sort].localeCompare(b[filter.sort]))]
-    }
-    return posts
-  }, [filter.sort, posts])
-
-  const sortedAndSearchedPosts = React.useMemo(() => {
-    return sortedPosts.filter(post => post.title.toLowerCase().includes(filter.query.toLowerCase()))
-  }, [filter.query, sortedPosts])
+  const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
 
   const cretaePost = (newPost) => {
     setPosts([...posts, newPost])
