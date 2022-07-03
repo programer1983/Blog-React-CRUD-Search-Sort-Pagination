@@ -7,17 +7,22 @@ import PostForm from "./components/PostForm/PostForm";
 import PostList from "./components/PostList/PostList"
 import { usePosts } from "./Hooks/UsePost";
 import MyButton from "./Ui/Button/MyButton";
+import Loader from "./Ui/Loader/Loader";
 
 function App() {
   const [posts, setPosts] = React.useState([])
-
   const [filter, setFilter] = React.useState({sort: "", query: ""})
   const [modal, setModal] = React.useState(false)
+  const [isPostsLoading, setIsPostsLoading] = React.useState(false)
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
 
   async function fetchPost(){
-    const posts = await PostService.getAll()
-    setPosts(posts)
+    setIsPostsLoading(true)
+    setTimeout( async () => {
+      const posts = await PostService.getAll()
+      setPosts(posts)
+      setIsPostsLoading(false)
+    }, 1000)
   }
 
   React.useEffect(() => {
@@ -43,7 +48,10 @@ function App() {
       </MyModal>
         <hr style={{margin: '20px 0' }} />
         <PostFilter filter={filter} setFilter={setFilter}/>
-        <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Список Постов"/>
+        {isPostsLoading 
+          ? <div style={{display: "flex", justifyContent: "center", marginTop: "50px"}}><Loader /></div>
+          : <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Список Постов"/>
+        }
     </div>
   );
 }
