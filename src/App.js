@@ -9,20 +9,27 @@ import { useFetching } from "./Hooks/UseFetching";
 import { usePosts } from "./Hooks/UsePost";
 import MyButton from "./Ui/Button/MyButton";
 import Loader from "./Ui/Loader/Loader";
+import { getPageCount, getPagesArray } from "./Utils/Pages";
 
 function App() {
   const [posts, setPosts] = React.useState([])
   const [filter, setFilter] = React.useState({sort: "", query: ""})
   const [modal, setModal] = React.useState(false)
+  const [totalPages, setTotalPages] = React.useState(0)
+  const [limit, setLimit] = React.useState(10)
+  const [page, setPage] = React.useState(1)
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
+  let pagesArray = getPagesArray(totalPages)
   const [fetchPosts, isPostsLoading, postError] = useFetching( async () => {
-    const posts = await PostService.getAll()
-    setPosts(posts)
+    const response = await PostService.getAll(limit, page)
+    setPosts(response.data)
+    const totalCount = response.headers['x-total-count']
+    setTotalPages(getPageCount(totalCount, limit))
   })
 
   React.useEffect(() => {
     fetchPosts()
-  }, [])
+  }, [page])
 
   const cretaePost = (newPost) => {
     setPosts([...posts, newPost])
@@ -31,6 +38,10 @@ function App() {
 
   const removePost = (id) => {
     setPosts(posts.filter(p => p.id !== id))
+  }
+
+  const changePage = (page) => {
+    setPage(page)
   }
 
   return (
@@ -48,6 +59,16 @@ function App() {
           ? <div style={{display: "flex", justifyContent: "center", marginTop: "50px"}}><Loader /></div>
           : <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Список Постов"/>
         }
+        <div className="page__wrapper">
+          {pagesArray.map((p) => 
+            <span
+              onClick={() => changePage(p)} 
+              key={p} 
+              className={page === p ? "page page__current" : "page"}>
+                {p}
+              </span>
+          )}
+        </div>
     </div>
   );
 }
