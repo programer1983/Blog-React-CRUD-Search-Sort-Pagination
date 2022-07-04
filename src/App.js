@@ -20,7 +20,7 @@ function App() {
   const [page, setPage] = React.useState(1)
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
   let pagesArray = getPagesArray(totalPages)
-  const [fetchPosts, isPostsLoading, postError] = useFetching( async () => {
+  const [fetchPosts, isPostsLoading, postError] = useFetching( async (limit, page) => {
     const response = await PostService.getAll(limit, page)
     setPosts(response.data)
     const totalCount = response.headers['x-total-count']
@@ -28,8 +28,8 @@ function App() {
   })
 
   React.useEffect(() => {
-    fetchPosts()
-  }, [page])
+    fetchPosts(limit, page)
+  }, [])
 
   const cretaePost = (newPost) => {
     setPosts([...posts, newPost])
@@ -42,6 +42,7 @@ function App() {
 
   const changePage = (page) => {
     setPage(page)
+    fetchPosts(limit, page)
   }
 
   return (
