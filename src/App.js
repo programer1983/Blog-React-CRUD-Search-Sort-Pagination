@@ -2,6 +2,7 @@ import React from "react";
 import PostService from "./API/PostServece";
 import "./App.css"
 import MyModal from "./components/MyModal/MyModal";
+import Pagination from "./components/Pagination/Pagination";
 import PostFilter from "./components/PostFilter/PostFilter";
 import PostForm from "./components/PostForm/PostForm";
 import PostList from "./components/PostList/PostList"
@@ -9,7 +10,7 @@ import { useFetching } from "./Hooks/UseFetching";
 import { usePosts } from "./Hooks/UsePost";
 import MyButton from "./Ui/Button/MyButton";
 import Loader from "./Ui/Loader/Loader";
-import { getPageCount, getPagesArray } from "./Utils/Pages";
+import { getPageCount} from "./Utils/Pages";
 
 function App() {
   const [posts, setPosts] = React.useState([])
@@ -19,7 +20,6 @@ function App() {
   const [limit, setLimit] = React.useState(10)
   const [page, setPage] = React.useState(1)
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
-  let pagesArray = getPagesArray(totalPages)
   const [fetchPosts, isPostsLoading, postError] = useFetching( async (limit, page) => {
     const response = await PostService.getAll(limit, page)
     setPosts(response.data)
@@ -60,16 +60,7 @@ function App() {
           ? <div style={{display: "flex", justifyContent: "center", marginTop: "50px"}}><Loader /></div>
           : <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Список Постов"/>
         }
-        <div className="page__wrapper">
-          {pagesArray.map((p) => 
-            <span
-              onClick={() => changePage(p)} 
-              key={p} 
-              className={page === p ? "page page__current" : "page"}>
-                {p}
-              </span>
-          )}
-        </div>
+       <Pagination totalPages={totalPages} page={page} changePage={changePage}/>
     </div>
   );
 }
