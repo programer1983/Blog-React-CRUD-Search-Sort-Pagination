@@ -10,3 +10,7 @@
 button {
     padding: 7px;
 }
+
+.post__btns {
+    display: flex;
+}
