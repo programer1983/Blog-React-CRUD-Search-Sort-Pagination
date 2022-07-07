@@ -38,7 +38,9 @@ const PostPage = () => {
             ? <Loader />
             : <div>
                 {comment.map((com) =>
-                  <div className={styles.information}>
+                  <div
+                     key={com.id}
+                     className={styles.information}>
                     <h5>{com.email}</h5>
                     <div>{com.body}</div>
                   </div>
