@@ -7,9 +7,14 @@ import styles from "./Navbar.module.css"
 const Navbar = () => {
   const {setIsAuth} = React.useContext(AuthContext)
 
+  const logout = () => {
+    setIsAuth(false)
+    localStorage.removeItem('auth')
+  }
+
   return (
     <div className={styles.navbar}>
-      <MyButton onClick={() => setIsAuth(false)}>
+      <MyButton onClick={logout}>
         Exit
       </MyButton>
     <div className={styles.navbar__items}>
