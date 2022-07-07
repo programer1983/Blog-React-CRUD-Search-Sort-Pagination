@@ -1,4 +1,5 @@
 import React from "react";
+import { useObserver } from "../../Hooks/useObserver";
 import PostService from "./../../API/PostServece"
 import MyModal from "./../../components/MyModal/MyModal"
 import Pagination from "./../../components/Pagination/Pagination"
@@ -18,17 +19,22 @@ function Posts() {
   const [totalPages, setTotalPages] = React.useState(0)
   const [limit, setLimit] = React.useState(10)
   const [page, setPage] = React.useState(1)
+  const lastElement = React.useRef()
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
   const [fetchPosts, isPostsLoading, postError] = useFetching( async (limit, page) => {
     const response = await PostService.getAll(limit, page)
-    setPosts(response.data)
+    setPosts([...posts, ...response.data])
     const totalCount = response.headers['x-total-count']
     setTotalPages(getPageCount(totalCount, limit))
   })
 
+  useObserver(lastElement, page < totalPages, isPostsLoading, () => {
+    setPage(page + 1)
+  })
+
   React.useEffect(() => {
     fetchPosts(limit, page)
-  }, [])
+  }, [page])
 
   const cretaePost = (newPost) => {
     setPosts([...posts, newPost])
@@ -41,7 +47,6 @@ function Posts() {
 
   const changePage = (page) => {
     setPage(page)
-    fetchPosts(limit, page)
   }
 
   return (
@@ -55,9 +60,12 @@ function Posts() {
         <hr style={{margin: '20px 0' }} />
         <PostFilter filter={filter} setFilter={setFilter}/>
         {postError && <h1>An error has occurred!</h1>}
-        {isPostsLoading 
-          ? <div style={{display: "flex", justifyContent: "center", marginTop: "50px"}}><Loader /></div>
-          : <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Список Постов"/>
+        <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Список Постов"/>
+        <div ref={lastElement} style={{height: 20, background: 'red'}}/>
+        {isPostsLoading &&
+           <div style={{display: "flex", justifyContent: "center", marginTop: "50px"}}>
+            <Loader />
+          </div>
         }
        <Pagination totalPages={totalPages} page={page} changePage={changePage}/>
     </div>
