@@ -1,5 +1,6 @@
 import React from "react";
 import { useObserver } from "../../Hooks/useObserver";
+import Select from "../../Ui/Select/Select";
 import PostService from "./../../API/PostServece"
 import MyModal from "./../../components/MyModal/MyModal"
 import Pagination from "./../../components/Pagination/Pagination"
@@ -34,7 +35,7 @@ function Posts() {
 
   React.useEffect(() => {
     fetchPosts(limit, page)
-  }, [page])
+  }, [page, limit])
 
   const cretaePost = (newPost) => {
     setPosts([...posts, newPost])
@@ -59,9 +60,20 @@ function Posts() {
       </MyModal>
         <hr style={{margin: '20px 0' }} />
         <PostFilter filter={filter} setFilter={setFilter}/>
+        <Select
+           value={limit}
+           onChange={value => setLimit(value)}
+           defaultValue="Number of items per page"
+           options={[
+            {value: 5, name: '5'},
+            {value: 10, name: '10'},
+            {value: 25, name: '25'},
+            {value: -1, name: "show all"},
+           ]}
+        />
         {postError && <h1>An error has occurred!</h1>}
         <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Список Постов"/>
-        <div ref={lastElement} style={{height: 20, background: 'red'}}/>
+        <div ref={lastElement} style={{height: 20, background: 'white'}}/>
         {isPostsLoading &&
            <div style={{display: "flex", justifyContent: "center", marginTop: "50px"}}>
             <Loader />
